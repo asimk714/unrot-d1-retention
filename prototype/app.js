@@ -874,7 +874,8 @@ function TomorrowsMissionScreen({
 // ============================================================
 function Day1ReturnScreen({
   user,
-  lesson
+  lesson,
+  setPhase
 }) {
   const mission = LESSONS.find(l => l.id === user.missionLessonId) || LESSONS[1];
   return /*#__PURE__*/React.createElement("div", {
@@ -943,7 +944,8 @@ function Day1ReturnScreen({
 // ============================================================
 function Day1LessonScreen({
   user,
-  lesson
+  lesson,
+  setPhase
 }) {
   const [started, setStarted] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -1578,12 +1580,14 @@ function App() {
    active: "streak"
  }), /*#__PURE__*/React.createElement(Day1ReturnScreen, {
    user: user,
-   lesson: lesson
+   lesson: lesson,
+   setPhase: setPhase
  })), phase === 'd1Lesson' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
    active: "home"
  }), /*#__PURE__*/React.createElement(Day1LessonScreen, {
    user: user,
-   lesson: lesson
+   lesson: lesson,
+   setPhase: setPhase
  })), phase === 'd1Complete' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
    active: "streak"
  }), /*#__PURE__*/React.createElement(D1CompleteScreen, {
