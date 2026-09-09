@@ -431,7 +431,7 @@ function OnboardingScreen({
   }, notifGranted === null && 'Get daily lesson reminders?', notifGranted === true && 'Daily reminders are on ✓', notifGranted === false && 'Reminders skipped — you can enable later')), /*#__PURE__*/React.createElement("div", {
     className: `toggle ${notifGranted === true ? 'on' : ''}`,
     onClick: () => setNotifGranted(notifGranted === true ? null : true)
-  })), notifGranted === true && /*#__PURE__*/React.createElement("p", {
+  }, /*#__PURE__*/React.createElement("div", { className: "toggle-knob" }))), notifGranted === true && /*#__PURE__*/React.createElement("p", {
     className: "small",
     style: {
       marginTop: 10,
@@ -453,7 +453,7 @@ function OnboardingScreen({
       marginTop: 14,
       textAlign: 'center'
     }
-  }, "By continuing, you agree to Unrot's Terms and Privacy Policy."));
+  }, "By continuing, you agree to Unrot\'s Terms and Privacy Policy."));
 }
 
 // ============================================================
