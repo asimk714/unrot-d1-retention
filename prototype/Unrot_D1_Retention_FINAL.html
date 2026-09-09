@@ -315,15 +315,79 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
 
 </script>
 <style>
+  /* ============================================================
+     DESIGN TOKENS
+     ============================================================ */
+  :root,
+  [data-theme="dark"] {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface-elevated: #1a1a24;
+    --border: #1c1c24;
+    --border-light: #25252e;
+    --text-primary: #f5f5f7;
+    --text-secondary: #98989d;
+    --text-tertiary: #636366;
+    --accent: #007aff;
+    --accent-soft: rgba(0,122,255,0.15);
+    --success: #34c759;
+    --warning: #ff9500;
+    --danger: #ff3b30;
+    --card-bg: #12121a;
+    --card-border: #1c1c24;
+    --card-ivory-bg: #1a1a24;
+    --card-ivory-border: #25252e;
+    --toggle-bg: #1c1c24;
+    --toggle-on-bg: #007aff;
+    --shadow: rgba(0,0,0,0.5);
+    --overlay-bg: rgba(10,10,15,0.8);
+    --gradient-welcome: linear-gradient(135deg, #007aff, #5856d6);
+    --gradient-notif: linear-gradient(135deg, #5ac8fa, #007aff);
+    --gradient-mission: linear-gradient(135deg, rgba(0,122,255,0.1), rgba(88,86,214,0.06));
+    --gradient-streak: linear-gradient(135deg, #ff9500, #ff6b00);
+  }
+
+  [data-theme="light"] {
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-elevated: #f0f0f5;
+    --border: #d1d1d6;
+    --border-light: #e5e5ea;
+    --text-primary: #1d1d1f;
+    --text-secondary: #6e6e73;
+    --text-tertiary: #8e8e93;
+    --accent: #007aff;
+    --accent-soft: rgba(0,122,255,0.1);
+    --success: #34c759;
+    --warning: #ff9500;
+    --danger: #ff3b30;
+    --card-bg: #ffffff;
+    --card-border: #d1d1d6;
+    --card-ivory-bg: #f2f2f7;
+    --card-ivory-border: #e5e5ea;
+    --toggle-bg: #d1d1d6;
+    --toggle-on-bg: #007aff;
+    --shadow: rgba(0,0,0,0.08);
+    --overlay-bg: rgba(255,255,255,0.85);
+    --gradient-welcome: linear-gradient(135deg, #007aff, #5856d6);
+    --gradient-notif: linear-gradient(135deg, #007aff, #5ac8fa);
+    --gradient-mission: linear-gradient(135deg, rgba(0,122,255,0.06), rgba(88,86,214,0.04));
+    --gradient-streak: linear-gradient(135deg, #ff9500, #ff6b00);
+  }
+
+  /* ============================================================
+     RESET
+     ============================================================ */
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0a0a0f;
-    color: #f5f5f7;
+    background: var(--bg);
+    color: var(--text-primary);
     overflow: hidden;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    transition: background 0.25s ease, color 0.25s ease;
   }
   #root { height: 100%; }
   .phone-frame {
@@ -332,21 +396,22 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
     height: 100vh;
     max-height: 844px;
     margin: 0 auto;
-    background: #0a0a0f;
+    background: var(--bg);
     position: relative;
     overflow: hidden;
-    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    box-shadow: 0 0 40px var(--shadow);
+    transition: background 0.25s ease;
   }
   @media (min-width: 480px) {
     body { display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px 0; }
-    .phone-frame { border-radius: 40px; overflow: hidden; border: 1px solid #1c1c24; }
+    .phone-frame { border-radius: 40px; overflow: hidden; border: 1px solid var(--border); }
   }
-  .screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: #0a0a0f; scrollbar-width: none; }
+  .screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: var(--bg); scrollbar-width: none; }
   .screen::-webkit-scrollbar { display: none; }
-  .status-bar { position: absolute; top: 0; left: 0; right: 0; padding: 12px 16px 8px; display: flex; justify-content: space-between; font-size: 12px; color: #8e8e93; font-weight: 600; z-index: 10; }
-  .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 20px 16px; display: flex; justify-content: space-around; border-top: 1px solid #1c1c24; background: #0a0a0f; }
-  .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #636366; gap: 4px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: all 0.2s; min-height: 44px; }
-  .nav-item.active { color: #f5f5f7; }
+  .status-bar { position: absolute; top: 0; left: 0; right: 0; padding: 12px 16px 8px; display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); font-weight: 600; z-index: 10; }
+  .bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 20px 16px; display: flex; justify-content: space-around; border-top: 1px solid var(--border); background: var(--bg); }
+  .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--text-tertiary); gap: 4px; cursor: pointer; padding: 6px 10px; border-radius: 8px; transition: all 0.2s; min-height: 44px; }
+  .nav-item.active { color: var(--text-primary); }
   .nav-item:active { transform: scale(0.95); }
   .nav-icon { width: 24px; height: 24px; }
 
@@ -354,11 +419,11 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   h1 { font-size: 26px; font-weight: 700; line-height: 1.2; letter-spacing: -0.4px; }
   h2 { font-size: 20px; font-weight: 600; line-height: 1.35; letter-spacing: -0.2px; }
   h3 { font-size: 16px; font-weight: 600; line-height: 1.45; }
-  p { font-size: 15px; line-height: 1.6; color: #98989d; }
-  .label { font-size: 12px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.6px; }
-  .small { font-size: 13px; color: #636366; line-height: 1.5; }
-  .body-small { font-size: 14px; line-height: 1.6; color: #98989d; }
-  .muted { color: #636366; }
+  p { font-size: 15px; line-height: 1.6; color: var(--text-secondary); }
+  .label { font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.6px; }
+  .small { font-size: 13px; color: var(--text-tertiary); line-height: 1.5; }
+  .body-small { font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+  .muted { color: var(--text-tertiary); }
 
   /* Buttons */
   .btn {
@@ -368,29 +433,29 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
     -webkit-appearance: none; appearance: none;
   }
   .btn:active { transform: scale(0.98); }
-  .btn-primary { background: #007aff; color: white; }
+  .btn-primary { background: var(--accent); color: white; }
   .btn-primary:hover { background: #0066d6; }
   .btn-primary:disabled { background: #3a6ea5; cursor: default; }
-  .btn-secondary { background: #1c1c24; color: #f5f5f7; border: 1px solid #2c2c35; }
-  .btn-secondary:hover { background: #25252e; }
-  .btn-ghost { background: transparent; color: #007aff; padding: 12px 16px; }
-  .btn-ghost:hover { background: rgba(0,122,255,0.1); }
-  .btn-success { background: #34c759; color: white; }
+  .btn-secondary { background: var(--surface-elevated); color: var(--text-primary); border: 1px solid var(--border-light); }
+  .btn-secondary:hover { background: var(--surface); }
+  .btn-ghost { background: transparent; color: var(--accent); padding: 12px 16px; }
+  .btn-ghost:hover { background: var(--accent-soft); }
+  .btn-success { background: var(--success); color: white; }
   .btn-sm { padding: 10px 16px; font-size: 13px; border-radius: 10px; min-height: 40px; }
 
   /* Cards */
-  .card { background: #12121a; border: 1px solid #1c1c24; border-radius: 14px; padding: 16px; }
-  .card-ivory { background: #1a1a24; border: 1px solid #25252e; border-radius: 14px; padding: 18px; }
-  .chip { display: inline-block; padding: 5px 11px; border-radius: 10px; font-size: 12px; font-weight: 500; background: #1c1c24; color: #98989d; }
-  .chip-blue { background: rgba(0,122,255,0.15); color: #007aff; }
+  .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px; padding: 16px; }
+  .card-ivory { background: var(--card-ivory-bg); border: 1px solid var(--card-ivory-border); border-radius: 14px; padding: 18px; }
+  .chip { display: inline-block; padding: 5px 11px; border-radius: 10px; font-size: 12px; font-weight: 500; background: var(--surface-elevated); color: var(--text-secondary); }
+  .chip-blue { background: var(--accent-soft); color: var(--accent); }
 
   /* Lesson card */
-  .lesson-card { background: #12121a; border: 1px solid #1c1c24; border-radius: 16px; padding: 20px; margin-bottom: 14px; }
+  .lesson-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 20px; margin-bottom: 14px; }
   .lesson-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
   .lesson-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-  .lesson-progress { height: 6px; background: #1c1c24; border-radius: 3px; overflow: hidden; margin-top: 16px; }
-  .lesson-progress-bar { height: 100%; background: #007aff; border-radius: 3px; width: 0%; transition: width 0.5s ease; }
-  .completion-check { width: 56px; height: 56px; border-radius: 50%; background: #34c759; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+  .lesson-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 16px; }
+  .lesson-progress-bar { height: 100%; background: var(--accent); border-radius: 3px; width: 0%; transition: width 0.5s ease; }
+  .completion-check { width: 56px; height: 56px; border-radius: 50%; background: var(--success); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
   @keyframes popIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
   @keyframes fadeIn { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
   @keyframes slideUp { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
@@ -399,121 +464,116 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   .slide-up { animation: slideUp 0.5s ease; }
 
   /* Streak */
-  .streak-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: linear-gradient(135deg, #ff9500, #ff6b00); border-radius: 20px; color: white; font-weight: 700; font-size: 14px; }
+  .streak-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--gradient-streak); border-radius: 20px; color: white; font-weight: 700; font-size: 14px; }
   .streak-fire { font-size: 16px; }
 
   /* Notification */
   .notification-simulation {
     position: absolute; top: 60px; right: 10px; width: calc(100% - 32px); max-width: 85vw;
-    background: #12121a; border: 1px solid #2c2c35; border-radius: 14px; padding: 14px 16px;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.6); z-index: 100; cursor: pointer;
+    background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 14px; padding: 14px 16px;
+    box-shadow: 0 12px 40px var(--shadow); z-index: 100; cursor: pointer;
     animation: slideInFromTop 0.4s ease;
     display: flex; align-items: center; gap: 12px;
   }
   @keyframes slideInFromTop { 0% { opacity: 0; transform: translateY(-20px); } 100% { opacity: 1; transform: translateY(0); } }
-  .notification-icon { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #007aff, #5856d6); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .notification-icon { width: 40px; height: 40px; border-radius: 12px; background: var(--gradient-notif); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
   .notification-body { flex: 1; min-width: 0; }
-  .notification-title { font-weight: 600; font-size: 14px; color: #f5f5f7; }
-  .notification-text { font-size: 13px; color: #98989d; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .notification-time { font-size: 11px; color: #636366; margin-top: 2px; }
-  .notification-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: #636366; font-size: 18px; flex-shrink: 0; }
+  .notification-title { font-weight: 600; font-size: 14px; color: var(--text-primary); }
+  .notification-text { font-size: 13px; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .notification-time { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; }
+  .notification-close { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); font-size: 18px; flex-shrink: 0; }
 
   /* Event log */
   .event-log {
     position: absolute; bottom: 80px; left: 16px; right: 16px; max-height: 200px;
-    background: rgba(10,10,15,0.95); border: 1px solid #1c1c24; border-radius: 12px;
+    background: var(--overlay-bg); border: 1px solid var(--border); border-radius: 12px;
     padding: 12px; overflow-y: auto; font-family: 'SF Mono', Menlo, monospace; font-size: 11px;
     z-index: 50; display: none; backdrop-filter: blur(10px);
   }
   .event-log.visible { display: block; }
-  .event-entry { padding: 4px 0; border-bottom: 1px solid #1c1c24; color: #007aff; }
-  .event-entry .props { color: #98989d; font-size: 10px; margin-top: 2px; }
-  .event-entry .time { color: #636366; margin-right: 8px; }
+  .event-entry { padding: 4px 0; border-bottom: 1px solid var(--border); color: var(--accent); }
+  .event-entry .props { color: var(--text-tertiary); font-size: 10px; margin-top: 2px; }
+  .event-entry .time { color: var(--text-tertiary); margin-right: 8px; }
   .toggle-events { position: absolute; top: 12px; right: 16px; z-index: 60; }
 
   /* Deep link animation */
   .deep-link-overlay {
-    position: fixed; inset: 0; background: #0a0a0f; z-index: 200;
+    position: fixed; inset: 0; background: var(--bg); z-index: 200;
     display: flex; align-items: center; justify-content: center;
   }
   .deep-link-ring {
     width: 120px; height: 120px; border-radius: 50%;
-    border: 3px solid #007aff; animation: ringExpand 1s ease-out forwards;
+    border: 3px solid var(--accent); animation: ringExpand 1s ease-out forwards;
   }
   @keyframes ringExpand { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
   .deep-link-dot {
-    width: 12px; height: 12px; border-radius: 50%; background: #007aff;
+    width: 12px; height: 12px; border-radius: 50%; background: var(--accent);
     animation: dotAppear 0.3s ease 0.8s, dotPulse 1.5s ease 1.1s infinite;
   }
   @keyframes dotAppear { 0% { transform: scale(0); } 100% { transform: scale(1); } }
   @keyframes dotPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(0,122,255,0.5); } 50% { box-shadow: 0 0 0 16px rgba(0,122,255,0); } }
 
   /* Toggle switch */
-  .toggle { position: relative; width: 48px; height: 28px; background: #1c1c24; border-radius: 14px; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
-  .toggle.on { background: #007aff; }
+  .toggle { position: relative; width: 48px; height: 28px; background: var(--toggle-bg); border-radius: 14px; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+  .toggle.on { background: var(--toggle-on-bg); }
   .toggle-knob { position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: white; transition: transform 0.2s; }
   .toggle.on .toggle-knob { transform: translateX(20px); }
 
   /* Welcome screen */
-  .welcome-logo { font-size: 48px; font-weight: 800; letter-spacing: -2px; background: linear-gradient(135deg, #007aff, #5856d6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
-  .welcome-subtitle { font-size: 14px; color: #8e8e93; margin-top: 4px; }
+  .welcome-logo { font-size: 48px; font-weight: 800; letter-spacing: -2px; background: var(--gradient-welcome); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; }
+  .welcome-subtitle { font-size: 14px; color: var(--text-tertiary); margin-top: 4px; }
 
   /* Divider */
-  .divider { height: 1px; background: #1c1c24; margin: 16px 0; }
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
 
   /* Scrollbar for lesson content */
   .scroll-content { max-height: 60vh; overflow-y: auto; padding-right: 4px; }
 
   /* Tooltip style */
-  .hint { font-size: 12px; color: #636366; font-style: italic; margin-top: 8px; }
+  .hint { font-size: 12px; color: var(--text-tertiary); font-style: italic; margin-top: 8px; }
 
   .tag {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500;
-    background: #1c1c24; color: #8e8e93;
+    background: var(--surface-elevated); color: var(--text-tertiary);
   }
 
   /* Knowledge check */
   .kc-container {
     padding: 16px;
-    background: #12121a;
-    border: 1px solid #1c1c24;
-    border-radius: 14px;
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
   }
   .kc-question {
-    font-size: 15px; font-weight: 600; color: #f5f5f7;
-    margin-bottom: 12px; line-height: 1.45;
+    font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; line-height: 1.45;
   }
   .kc-options { display: flex; flex-direction: column; gap: 8px; }
   .kc-option {
     display: flex; align-items: center; gap: 10px;
     width: 100%; padding: 13px 14px; min-height: 44px;
-    background: #1c1c24; border: 1px solid #25252e;
+    background: var(--surface-elevated); border: 1px solid var(--border-light);
     border-radius: 11px; cursor: pointer;
-    font-size: 14px; color: #f5f5f7; text-align: left;
+    font-size: 14px; color: var(--text-primary); text-align: left;
     transition: all 0.15s;
   }
-  .kc-option:hover { background: #25252e; }
-  .kc-option.selected { border-color: #007aff; background: rgba(0,122,255,0.1); }
+  .kc-option:hover { background: var(--border); }
+  .kc-option.selected { border-color: var(--accent); background: var(--accent-soft); }
   .kc-circle {
     width: 20px; height: 20px; flex-shrink: 0;
-    border-radius: 50%; border: 2px solid #636366;
+    border-radius: 50%; border: 2px solid var(--text-tertiary);
     display: flex; align-items: center; justify-content: center;
     transition: all 0.15s;
   }
-  .kc-option.selected .kc-circle {
-    border-color: #007aff; background: #007aff; color: white;
-  }
+  .kc-option.selected .kc-circle { border-color: var(--accent); background: var(--accent); color: white; }
   .kc-feedback {
     margin-top: 12px; padding: 11px 13px;
     border-radius: 10px; font-size: 13px;
   }
   .kc-feedback.correct {
-    background: rgba(52,199,89,0.12); color: #34c759;
+    background: rgba(52,199,89,0.12); color: var(--success);
     border: 1px solid rgba(52,199,89,0.2);
   }
   .kc-feedback.incorrect {
-    background: rgba(255,59,48,0.1); color: #ff9500;
+    background: rgba(255,59,48,0.1); color: var(--warning);
     border: 1px solid rgba(255,149,0,0.2);
   }
   .kc-option:disabled { cursor: default; opacity: 0.7; }
@@ -524,25 +584,397 @@ function(a,b,c){if(!Vd(b))throw Error(m(200));return Wd(null,a,b,!1,c)};Q.unmoun
   .reminder-option {
     display: flex; align-items: center; gap: 6px;
     padding: 11px 16px; border-radius: 12px;
-    background: #1c1c24; border: 1px solid #25252e;
-    color: #f5f5f7; font-size: 14px; font-weight: 500;
+    background: var(--surface-elevated); border: 1px solid var(--border-light);
+    color: var(--text-primary); font-size: 14px; font-weight: 500;
     cursor: pointer; transition: all 0.15s; min-height: 40px;
   }
-  .reminder-option:hover { background: #25252e; }
+  .reminder-option:hover { background: var(--border); }
   .reminder-option.selected {
-    background: rgba(0,122,255,0.15); border-color: #007aff; color: #007aff;
+    background: var(--accent-soft); border-color: var(--accent); color: var(--accent);
   }
   .reminder-time-label { pointer-events: none; }
-  .reminder-check { color: #007aff; font-weight: 700; }
+  .reminder-check { color: var(--accent); font-weight: 700; }
 
   /* Mission reveal */
   .mission-hero {
     margin: 0;
   }
-  .mission-badge {
-    display: inline-block;
-  }
+  .mission-badge { display: inline-block; }
   .mission-meta { flex-wrap: wrap; }
+
+  /* ============================================================
+     LANDING PAGE
+     ============================================================ */
+  .landing-screen { height: 100%; overflow-y: auto; padding: 0; position: relative; background: var(--bg); }
+  .landing-header { position: absolute; top: 0; left: 0; right: 0; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+  .wordmark { font-size: 22px; font-weight: 800; letter-spacing: -1px; background: var(--gradient-welcome); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
+  .theme-toggle-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-primary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 18px;
+    transition: all 0.2s;
+  }
+  .theme-toggle-btn:active { transform: scale(0.92); }
+  .theme-toggle-btn .icon-sun { display: none; }
+  .theme-toggle-btn .icon-moon { display: block; }
+  [data-theme="light"] .theme-toggle-btn .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle-btn .icon-moon { display: none; }
+
+  .landing-hero {
+    position: absolute; top: 80px; left: 0; right: 0; padding: 0 24px; text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 12px; font-weight: 600; margin-bottom: 20px;
+    letter-spacing: 0.3px;
+  }
+  .hero-title {
+    font-size: 38px; font-weight: 800; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 16px;
+  }
+  .hero-subtitle {
+    font-size: 16px; line-height: 1.5; color: var(--text-secondary);
+    max-width: 300px; margin: 0 auto 32px;
+  }
+  .hero-cta-group { display: flex; flex-direction: column; gap: 10px; max-width: 280px; margin: 0 auto; }
+  .btn-hero-primary {
+    background: var(--accent); color: white; padding: 16px 24px;
+    border-radius: 14px; font-size: 16px; font-weight: 700;
+    border: none; cursor: pointer; width: 100%;
+    transition: all 0.2s; min-height: 52px;
+  }
+  .btn-hero-primary:active { transform: scale(0.97); }
+  .btn-hero-secondary {
+    background: var(--surface); color: var(--text-primary);
+    border: 1px solid var(--border); padding: 16px 24px;
+    border-radius: 14px; font-size: 15px; font-weight: 600;
+    cursor: pointer; width: 100%; transition: all 0.2s; min-height: 52px;
+  }
+  .btn-hero-secondary:active { transform: scale(0.97); }
+
+  .landing-features {
+    position: absolute; bottom: 150px; left: 0; right: 0; padding: 0 24px;
+    display: flex; flex-direction: column; gap: 10px;
+    animation: fadeIn 0.8s ease;
+  }
+  .feature-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .feature-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .feature-text { font-size: 14px; color: var(--text-secondary); line-height: 1.4; }
+
+  .landing-footer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 12px 24px; text-align: center;
+    color: var(--text-tertiary); font-size: 11px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  /* ============================================================
+     AUTH MODAL
+     ============================================================ */
+  .modal-overlay {
+    position: fixed; inset: 0; background: var(--overlay-bg);
+    z-index: 300; display: flex; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-sheet {
+    width: 100%; max-width: 360px; max-height: 80vh;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 24px; padding: 32px 24px;
+    overflow-y: auto; box-shadow: 0 20px 60px var(--shadow);
+    animation: slideUp 0.3s ease;
+  }
+  .modal-handle {
+    width: 36px; height: 4px; border-radius: 2px;
+    background: var(--border); margin: 0 auto 24px;
+  }
+  .modal-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 4px; }
+  .modal-subtitle { font-size: 14px; color: var(--text-secondary); text-align: center; margin-bottom: 28px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--surface-elevated); border: 1px solid var(--border);
+    color: var(--text-secondary); cursor: pointer; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .modal-close:active { transform: scale(0.92); }
+  .auth-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 20px 0;
+    color: var(--text-tertiary); font-size: 12px;
+  }
+  .auth-divider::before, .auth-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .demo-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 11px; font-weight: 600; margin-top: 16px;
+  }
+  .form-field { margin-bottom: 16px; }
+  .form-label { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%; padding: 14px 16px; border-radius: 12px;
+    background: var(--bg); border: 1px solid var(--border);
+    color: var(--text-primary); font-size: 15px; font-family: inherit;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--accent); }
+  .form-input::placeholder { color: var(--text-tertiary); }
+
+  /* ============================================================
+     COURSE CATALOGUE
+     ============================================================ */
+  .catalogue-screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: var(--bg); }
+  .catalogue-header { margin-bottom: 24px; }
+  .catalogue-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .catalogue-subtitle { font-size: 14px; color: var(--text-secondary); }
+  .catalogue-filters {
+    display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .filter-chip {
+    padding: 8px 16px; border-radius: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-secondary); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .filter-chip.active {
+    background: var(--accent); color: white; border-color: var(--accent);
+  }
+  .filter-chip:active { transform: scale(0.96); }
+  .course-grid { display: flex; flex-direction: column; gap: 12px; }
+  .course-card {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px; border-radius: 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .course-card:active { transform: scale(0.99); }
+  .course-number {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: var(--gradient-welcome); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; flex-shrink: 0;
+  }
+  .course-info { flex: 1; min-width: 0; }
+  .course-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .course-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 8px; }
+  .course-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+  .course-meta-item {
+    font-size: 11px; color: var(--text-tertiary);
+    padding: 3px 8px; border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .course-progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+  .course-progress-fill { height: 100%; background: var(--success); border-radius: 2px; transition: width 0.4s ease; }
+  .course-status { font-size: 11px; margin-top: 4px; }
+  .course-status.in-progress { color: var(--accent); }
+  .course-status.completed { color: var(--success); }
+  .course-status.not-started { color: var(--text-tertiary); }
+  .course-status.coming-soon { color: var(--warning); }
+
+  /* ============================================================
+     COURSE DETAIL
+     ============================================================ */
+  .detail-screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: var(--bg); }
+  .detail-back {
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--accent); font-size: 14px; font-weight: 500;
+    cursor: pointer; padding: 4px 0; margin-bottom: 16px;
+    background: none; border: none;
+  }
+  .detail-back:active { opacity: 0.7; }
+  .detail-hero {
+    padding: 20px; border-radius: 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    margin-bottom: 16px;
+  }
+  .detail-number {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: var(--gradient-welcome); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; margin-bottom: 16px;
+  }
+  .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .detail-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 16px; }
+  .detail-meta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .detail-meta-chip {
+    font-size: 12px; font-weight: 500;
+    padding: 6px 12px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  .detail-meta-chip.accent { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
+  .detail-section { margin-bottom: 20px; }
+  .detail-section-title {
+    font-size: 14px; font-weight: 600; color: var(--text-tertiary);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;
+  }
+  .detail-lesson-list { display: flex; flex-direction: column; gap: 8px; }
+  .detail-lesson-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .detail-lesson-num {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--surface-elevated); color: var(--text-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; flex-shrink: 0;
+  }
+  .detail-lesson-info { flex: 1; min-width: 0; }
+  .detail-lesson-title { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .detail-lesson-desc { font-size: 12px; color: var(--text-tertiary); }
+  .detail-lesson-duration { font-size: 11px; color: var(--text-tertiary); white-space: nowrap; }
+  .detail-lesson-item.locked { opacity: 0.5; }
+  .detail-lesson-item.locked .detail-lesson-title { color: var(--text-tertiary); }
+  .detail-cta {
+    padding: 18px; border-radius: 14px;
+    background: var(--gradient-mission); border: 1px solid var(--border-light);
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 8px;
+  }
+  .detail-cta-text .label { margin-bottom: 4px; }
+  .detail-cta-text h3 { font-size: 16px; }
+  .detail-cta-text p { font-size: 13px; }
+
+  /* ============================================================
+     DASHBOARD
+     ============================================================ */
+  .dashboard-screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: var(--bg); }
+  .dashboard-greeting { margin-bottom: 20px; }
+  .greeting-name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .greeting-message { font-size: 14px; color: var(--text-secondary); }
+  .progress-summary {
+    display: flex; justify-content: space-around;
+    padding: 16px; border-radius: 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    margin-bottom: 16px;
+  }
+  .progress-stat { text-align: center; }
+  .progress-stat-value { font-size: 24px; font-weight: 700; color: var(--text-primary); }
+  .progress-stat-label { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .progress-stat-accent .progress-stat-value { color: var(--accent); }
+
+  .today-mission {
+    padding: 20px; border-radius: 16px;
+    background: var(--gradient-mission); border: 1px solid var(--border-light);
+    margin-bottom: 16px;
+  }
+  .today-mission-label { font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .today-mission-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .today-mission-desc { font-size: 13px; color: var(--text-secondary); margin-bottom: 14px; }
+  .today-mission-progress { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+  .today-mission-progress-fill { height: 100%; background: var(--accent); border-radius: 3px; width: 42%; }
+  .today-mission-cta { width: 100%; }
+
+  .section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 12px;
+  }
+  .section-title { font-size: 16px; font-weight: 600; }
+  .section-link { font-size: 13px; color: var(--accent); cursor: pointer; background: none; border: none; }
+  .section-link:active { opacity: 0.7; }
+
+  .mini-course-list { display: flex; flex-direction: column; gap: 8px; }
+  .mini-course-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+  }
+  .mini-course-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--surface-elevated); color: var(--text-tertiary);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700; flex-shrink: 0;
+  }
+  .mini-course-info { flex: 1; min-width: 0; }
+  .mini-course-name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .mini-course-progress-text { font-size: 12px; color: var(--text-tertiary); }
+  .mini-course-right { text-align: right; }
+  .mini-course-percent { font-size: 14px; font-weight: 600; color: var(--success); }
+  .mini-course-label { font-size: 10px; color: var(--text-tertiary); text-transform: uppercase; }
+
+  .insight-card {
+    padding: 16px; border-radius: 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .insight-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .insight-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .insight-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
+
+  .milestone-card {
+    padding: 16px; border-radius: 14px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    margin-bottom: 12px;
+  }
+  .milestone-label { font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .milestone-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .milestone-desc { font-size: 13px; color: var(--text-secondary); }
+
+  /* ============================================================
+     D1 COMPLETION
+     ============================================================ */
+  .completion-screen { height: 100%; overflow-y: auto; padding: 20px 20px 110px; position: relative; background: var(--bg); }
+  .completion-hero {
+    text-align: center; padding: 20px; border-radius: 16px;
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    margin-bottom: 16px;
+  }
+  .completion-streak {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 20px;
+    background: var(--gradient-streak); color: white;
+    font-weight: 700; font-size: 14px; margin-bottom: 12px;
+  }
+  .completion-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+  .completion-subtitle { font-size: 14px; color: var(--text-secondary); margin-bottom: 16px; }
+  .completion-insight {
+    padding: 16px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    text-align: center; margin-bottom: 16px;
+  }
+  .completion-insight p { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
+  .completion-insight .small { color: var(--text-secondary); }
+  .completion-next {
+    padding: 18px; border-radius: 14px;
+    background: var(--gradient-mission); border: 1px solid var(--border-light);
+    text-align: center; margin-bottom: 12px;
+  }
+  .completion-next-label { font-size: 12px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .completion-next-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .completion-next-desc { font-size: 13px; color: var(--text-secondary); }
+  .completion-actions { display: flex; flex-direction: column; gap: 10px; }
+
+  /* ============================================================
+     THEME TRANSITIONS
+     ============================================================ */
+  .screen, .phone-frame, .bottom-nav, .lesson-card, .card, .card-ivory,
+  .kc-container, .notification-simulation, .reminder-option, .toggle,
+  .chip, .tag, .event-log, .modal-sheet, .detail-hero, .detail-lesson-item,
+  .mini-course-item, .insight-card, .milestone-card, .today-mission,
+  .completion-hero, .completion-insight, .completion-next, .progress-summary,
+  .feature-row, .landing-screen, .catalogue-screen, .detail-screen,
+  .dashboard-screen, .completion-screen, .btn, .form-input, .filter-chip,
+  .deep-link-overlay, .modal-overlay, .course-card, .modal-overlay * {
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
 </style>
 </head>
 <body>
@@ -808,9 +1240,97 @@ const Icons = {
     }
   }, /*#__PURE__*/React.createElement("path", {
     d: "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"
-  }))
+  })),
+  sun: /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    style: { width: 16, height: 16 }
+  }, /*#__PURE__*/React.createElement("circle", { cx: "12", cy: "12", r: "4" }),
+     /*#__PURE__*/React.createElement("path", { d: "M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" })),
+  moon: /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    style: { width: 16, height: 16 }
+  }, /*#__PURE__*/React.createElement("path", { d: "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" })),
+
 };
-const app = ReactDOM.createRoot(document.getElementById('root'));
+const app = ReactDOM.createRoot
+// ============================================================
+// COURSE CATALOGUE
+// ============================================================
+const COURSES = [
+  {
+    id: 'course-001',
+    number: '01',
+    title: 'AI Fundamentals',
+    description: 'Build a clear mental model of modern AI.',
+    outcome: 'Understand how AI systems work and what they can do.',
+    difficulty: 'Beginner',
+    duration: '15 min',
+    lessons: 3,
+    progress: 28,
+    status: 'Continue',
+    color: '#007aff'
+  },
+  {
+    id: 'course-002',
+    number: '02',
+    title: 'Prompt Engineering',
+    description: 'Write clearer prompts and get better results.',
+    outcome: 'Get better outputs from AI by communicating more precisely.',
+    difficulty: 'Beginner',
+    duration: '20 min',
+    lessons: 3,
+    progress: 42,
+    status: 'Continue',
+    color: '#5856d6'
+  },
+  {
+    id: 'course-003',
+    number: '03',
+    title: 'AI Agents',
+    description: 'Understand how AI systems move from chat to action.',
+    outcome: 'See what changes when AI can take actions, not just answer questions.',
+    difficulty: 'Intermediate',
+    duration: '25 min',
+    lessons: 2,
+    progress: 0,
+    status: 'Preview',
+    color: '#34c759'
+  },
+  {
+    id: 'course-004',
+    number: '04',
+    title: 'Problem Solving with AI',
+    description: 'Turn messy problems into structured AI workflows.',
+    outcome: 'Learn to break down complex problems and use AI at each step.',
+    difficulty: 'Intermediate',
+    duration: '20 min',
+    lessons: 3,
+    progress: 0,
+    status: 'Coming next',
+    color: '#ff9500'
+  },
+  {
+    id: 'course-005',
+    number: '05',
+    title: 'AI for Product & Work',
+    description: 'Apply AI to research, decisions, and execution.',
+    outcome: 'Use AI to accelerate research, synthesis, and decision-making.',
+    difficulty: 'Intermediate',
+    duration: '30 min',
+    lessons: 4,
+    progress: 0,
+    status: 'Coming next',
+    color: '#ff3b30'
+  }
+];
+
+(document.getElementById('root'));
 
 // ============================================================
 // UTILITY
@@ -1703,13 +2223,53 @@ function Day1LessonScreen({
 // ============================================================
 function D1CompleteScreen({
   user,
-  lesson
+  lesson,
+  setPhase
 }) {
   const mission = LESSONS.find(l => l.id === user.missionLessonId) || LESSONS[1];
   const nextLesson = LESSONS.find(l => l.id === mission.nextLessonId);
 
+  // Update progress on completion
+  useEffect(() => {
+    setStreak(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.streak, next);
+      return next;
+    });
+    setSessionsCompleted(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.sessions, next);
+      return next;
+    });
+    setLearnedMinutes(prev => {
+      const next = prev + 10;
+      saveStored(STORAGE_KEYS.minutes, next);
+      return next;
+    });
+    setMissionsCompleted(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.missions, next);
+      return next;
+    });
+    if (mission.id === 'lesson-002') {
+      setCourseProgress(prev => {
+        const next = { ...prev, 'course-002': Math.min(100, (prev['course-002'] || 0) + 10) };
+        saveStored(STORAGE_KEYS.courseProgress, next);
+        return next;
+      });
+    }
+    setCompletedLessons(prev => {
+      if (!prev.includes(mission.id)) {
+        const next = [...prev, mission.id];
+        saveStored(STORAGE_KEYS.completedLessons, next);
+        return next;
+      }
+      return prev;
+    });
+  }, []);
+
   return /*#__PURE__*/React.createElement("div", {
-    className: "screen"
+    className: "completion-screen"
   }, /*#__PURE__*/React.createElement("div", {
     className: "status-bar"
   }, /*#__PURE__*/React.createElement("span", null, "9:41"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCE6 \uD83D\uDD5B")), /*#__PURE__*/React.createElement("div", {
@@ -1719,78 +2279,52 @@ function D1CompleteScreen({
       textAlign: 'center'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "completion-hero"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "completion-check"
   }, Icons.check), /*#__PURE__*/React.createElement("div", {
-    className: "streak-badge",
-    style: {
-      marginBottom: 12,
-      display: 'inline-flex'
-    }
+    className: "completion-streak"
   }, /*#__PURE__*/React.createElement("span", {
     className: "streak-fire"
-  }, "\uD83D\uDD25"), /*#__PURE__*/React.createElement("span", null, "2 days")), /*#__PURE__*/React.createElement("h1", {
-    style: {
-      marginBottom: 4
-    }
+  }, "\uD83D\uDD25"), " " + streak + " day streak"), /*#__PURE__*/React.createElement("h1", {
+    className: "completion-title"
   }, "Mission complete."), /*#__PURE__*/React.createElement("p", {
-    className: "small",
-    style: {
-      color: '#98989d',
-      marginBottom: 16
-    }
-  }, "You kept your streak alive — Day 2 done."), /*#__PURE__*/React.createElement("div", {
-    className: "card-ivory",
-    style: {
-      marginBottom: 16,
-      textAlign: 'center'
-    }
-  }, /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 14,
-      color: '#f5f5f7',
-      marginBottom: 6
-    }
-  }, "You're building a habit that compounds."), /*#__PURE__*/React.createElement("p", {
+    className: "completion-subtitle"
+  }, "Day 1 is done."), /*#__PURE__*/React.createElement("p", {
     className: "small",
     style: {
       color: '#98989d',
       marginBottom: 0
     }
-  }, "Two days in, and you already know more than you did yesterday."), nextLesson && /*#__PURE__*/React.createElement("div", {
-    className: "mission-hero fade-in",
-    style: {
-      marginTop: 16,
-      padding: '20px 16px',
-      background: 'linear-gradient(135deg, rgba(0,122,255,0.1), rgba(88,86,214,0.06))',
-      border: '1px solid #25252e',
-      borderRadius: 16
-    }
+  }, "Your next 5-minute mission is ready.")), /*#__PURE__*/React.createElement("div", {
+    className: "completion-insight"
+  }, /*#__PURE__*/React.createElement("p", null, "You're building a habit that compounds."), /*#__PURE__*/React.createElement("p", {
+    className: "small"
+  }, "Two days in, and you already know more than you did yesterday.")), nextLesson && /*#__PURE__*/React.createElement("div", {
+    className: "completion-next"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "label",
-    style: {
-      marginBottom: 8,
-      color: '#007aff'
-    }
+    className: "completion-next-label"
   }, "Coming up next"), /*#__PURE__*/React.createElement("h3", {
-    style: {
-      marginBottom: 4
-    }
+    className: "completion-next-title"
   }, nextLesson.title), /*#__PURE__*/React.createElement("p", {
-    className: "small",
-    style: {
-      color: '#98989d',
-      marginBottom: 0
-    }
-  }, nextLesson.topic, " \u00B7 ", nextLesson.tags[1])), /*#__PURE__*/React.createElement("p", {
+    className: "completion-next-desc"
+  }, nextLesson.topic + " \u00B7 " + nextLesson.tags[1])), /*#__PURE__*/React.createElement("p", {
     className: "small",
     style: {
       textAlign: 'center',
       marginTop: 12,
       color: '#636366'
     }
-  }, "Your progress is saved. Keep going tomorrow."))));
+  }, "Your progress is saved. Keep going tomorrow."), /*#__PURE__*/React.createElement("div", {
+    className: "completion-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: () => setPhase('dashboard')
+  }, "Back to dashboard", Icons.home), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-secondary",
+    onClick: nextLesson ? () => setPhase('lesson') : () => setPhase('catalogue')
+  }, nextLesson ? "Continue learning" : "Browse courses", Icons.arrowRight))));
 }
-
 // ============================================================
 function NotificationSim({
   visible,
@@ -1932,17 +2466,13 @@ function BottomNav({
     icon: Icons.home,
     label: 'Home'
   }, {
-    id: 'streak',
-    icon: Icons.fire,
-    label: 'Streak'
-  }, {
-    id: 'news',
-    icon: Icons.news,
-    label: 'News'
-  }, {
-    id: 'book',
+    id: 'courses',
     icon: Icons.book,
-    label: 'Lessons'
+    label: 'Courses'
+  }, {
+    id: 'progress',
+    icon: Icons.sparkle,
+    label: 'Progress'
   }];
   return /*#__PURE__*/React.createElement("div", {
     className: "bottom-nav"
@@ -1951,6 +2481,588 @@ function BottomNav({
     className: `nav-item ${item.id === active || item.active ? 'active' : ''}`
   }, item.icon, /*#__PURE__*/React.createElement("span", null, item.label))));
 }
+
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
+const STORAGE_KEYS = {
+  theme: 'unrot-theme',
+  user: 'unrot_user',
+  streak: 'unrot_streak',
+  sessions: 'unrot_sessions',
+  minutes: 'unrot_minutes',
+  missions: 'unrot_missions',
+  courseProgress: 'unrot_course_progress',
+  completedLessons: 'unrot_completed_lessons'
+};
+
+function loadStored(key, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch (e) { return fallback; }
+}
+
+function saveStored(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
+}
+
+
+// ============================================================
+// SCREEN: LANDING
+// ============================================================
+function LandingScreen({ onStart, onLogin, onSignup }) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "landing-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "landing-header"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "wordmark"
+  }, "Unrot"), /*#__PURE__*/React.createElement("div", {
+    className: "header-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "theme-toggle-btn",
+    onClick: handleThemeToggle,
+    "aria-label": theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
+    style: {
+      position: "static",
+      width: "36px",
+      height: "36px",
+      padding: "0px",
+      background: "transparent",
+      border: "1px solid rgba(255,255,255,0.1)",
+      borderRadius: "50%",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#f5f5f7"
+    }
+  }, theme === "dark" ? Icons.sun : Icons.moon))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-eyebrow"
+  }, /*#__PURE__*/React.createElement("span", null, "Practical AI, 5 minutes a day")), /*#__PURE__*/React.createElement("h1", {
+    className: "hero-title"
+  }, "Five minutes today.", /*#__PURE__*/React.createElement("br", null), "More capable tomorrow."), /*#__PURE__*/React.createElement("p", {
+    className: "hero-subtitle"
+  }, "Short, focused lessons that help you build useful AI skills without adding another hour to your day."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-cta-group"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-primary",
+    onClick: onStart
+  }, "Wanna try? Have 5 minutes ", Icons.arrowRight), /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-secondary",
+    onClick: onLogin
+  }, "Log in"), /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-secondary",
+    onClick: onSignup
+  }, "Sign up"))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-features"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.book), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "One concept a day \u2014 short lessons designed to fit your schedule.")), /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.sparkle), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "Concrete missions that make your learning visible and rewarding.")), /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.fire), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "Track your streak and see your progress compound over time."))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-footer"
+  }, "Built for busy professionals who want to stay ahead of AI."));
+}
+
+// ============================================================
+// SCREEN: AUTH MODAL (demo only)
+// ============================================================
+function AuthModal({ mode, onClose, onAuthComplete }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const validatePassword = (v) => v.length >= 6;
+
+  const handleSubmit = () => {
+    setError('');
+    if (!email.trim()) { setError('Please enter your email.'); return; }
+    if (!validateEmail(email)) { setError('Enter a valid email address.'); return; }
+    if (mode === 'signup') {
+      if (!name.trim()) { setError('Please enter your name.'); return; }
+      if (!password || !validatePassword(password)) { setError('Password must be at least 6 characters.'); return; }
+    } else {
+      if (!password || !validatePassword(password)) { setError('Enter your password.'); return; }
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      const userData = {
+        id: 'user-' + Math.random().toString(36).slice(2, 8),
+        name: mode === 'signup' ? name.trim() : (name.trim() || email.split('@')[0]),
+        email: email.trim(),
+        notifGranted: null,
+        isFirstSession: mode === 'signup',
+        currentSession: 'sess-' + Date.now(),
+        d1Session: 'sess-d1-' + Date.now(),
+        returnedFromNotification: false,
+        reminderTime: null,
+        missionLessonId: null
+      };
+      saveStored(STORAGE_KEYS.user, userData);
+      onAuthComplete(userData, mode === 'signup');
+      onClose();
+    }, 400);
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-sheet",
+    onClick: (e) => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-handle"
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "modal-close",
+    onClick: onClose
+  }, Icons.x), /*#__PURE__*/React.createElement("h2", {
+    className: "modal-title"
+  }, mode === 'login' ? 'Welcome back' : 'Create your account'), /*#__PURE__*/React.createElement("p", {
+    className: "modal-subtitle"
+  }, mode === 'login' ? 'Log in to continue your learning.' : 'Start building your AI skills today.'), mode === 'signup' && /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Your name"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "text",
+    placeholder: "Asim",
+    value: name,
+    onChange: (e) => setName(e.target.value),
+    autoComplete: "name"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Email"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "email",
+    placeholder: "you@example.com",
+    value: email,
+    onChange: (e) => setEmail(e.target.value),
+    autoComplete: "email"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: mode === 'login' ? 'Your password' : 'At least 6 characters',
+    value: password,
+    onChange: (e) => setPassword(e.target.value),
+    autoComplete: "new-password"
+  })), error && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: '#ff3b30',
+      fontSize: 13,
+      marginBottom: 12,
+      textAlign: 'center'
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: handleSubmit,
+    disabled: loading
+  }, loading ? 'Please wait' : (mode === 'login' ? 'Continue' : 'Create account'), Icons.arrowRight), /*#__PURE__*/React.createElement("div", {
+    className: "auth-divider"
+  }, "or"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: onClose,
+    style: {
+      width: '100%',
+      padding: '12px',
+      fontSize: 14,
+      textAlign: 'center'
+    }
+  }, mode === 'login' ? "I don\'t have an account" : "I already have an account"), /*#__PURE__*/React.createElement("p", {
+    className: "demo-badge"
+  }, "Demo mode \u2014 no real account needed.")));
+}
+
+// ============================================================
+// SCREEN: DASHBOARD
+// ============================================================
+function DashboardScreen({ onCourses, onProgress, onContinue }) {
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 17) return 'Good afternoon';
+    return 'Good evening';
+  })();
+
+  const nextMission = COURSES.find(c => c.progress > 0 && c.status === 'Continue');
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-greeting"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "greeting-name"
+  }, greeting + ', ' + (user.name || 'there')), /*#__PURE__*/React.createElement("p", {
+    className: "greeting-message"
+  }, "Keep your learning momentum going.")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-summary"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, streak + (streak === 1 ? ' day' : ' days')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Streak")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, sessionsCompleted), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Sessions")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat progress-stat-accent"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, learnedMinutes), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Minutes learned")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, missionsCompleted + (missionsCompleted === 1 ? ' mission' : ' missions')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Missions")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, Object.keys(courseProgress).length), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Courses"))), nextMission && /*#__PURE__*/React.createElement("div", {
+    className: "today-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-label"
+  }, "Next 5-minute mission"), /*#__PURE__*/React.createElement("h2", {
+    className: "today-mission-title"
+  }, nextMission.title), /*#__PURE__*/React.createElement("p", {
+    className: "today-mission-desc"
+  }, nextMission.description), /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-progress"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-progress-fill"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary today-mission-cta",
+    onClick: onContinue
+  }, "Continue learning ", Icons.arrowRight)), !nextMission && /*#__PURE__*/React.createElement("div", {
+    className: "today-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-label"
+  }, "Your next mission"), /*#__PURE__*/React.createElement("h2", {
+    className: "today-mission-title"
+  }, "Start your first 5-minute mission."), /*#__PURE__*/React.createElement("p", {
+    className: "today-mission-desc"
+  }, "Pick a course and begin building your AI skills."), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary today-mission-cta",
+    onClick: onCourses
+  }, "View courses", Icons.arrowRight)), /*#__PURE__*/React.createElement("div", {
+    className: "section-header"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "Your courses"), /*#__PURE__*/React.createElement("button", {
+    className: "section-link",
+    onClick: onCourses
+  }, "See all")), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-list"
+  }, COURSES.slice(0, 3).map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: "mini-course-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-icon"
+  }, c.number), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-name"
+  }, c.title), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-progress-text"
+  }, (c.progress > 0 ? c.progress + '% done' : 'Not started yet'))), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-right"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-percent"
+  }, c.progress > 0 ? c.progress + '%' : '\u2014'), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-label"
+  }, c.progress > 0 ? 'Complete' : 'Start'))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-header"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "Insights"), /*#__PURE__*/React.createElement("button", {
+    className: "section-link",
+    onClick: onProgress
+  }, "View progress")), /*#__PURE__*/React.createElement("div", {
+    className: "insight-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "insight-label"
+  }, "Your pattern"), /*#__PURE__*/React.createElement("div", {
+    className: "insight-title"
+  }, "You learn best when the next step is concrete."), /*#__PURE__*/React.createElement("div", {
+    className: "insight-desc"
+  }, streak > 0 ? "Your streak shows you're building a habit. Keep the next step small and specific." : "Start with one 5-minute lesson and see how it feels.")), missionsCompleted >= 3 && /*#__PURE__*/React.createElement("div", {
+    className: "milestone-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "milestone-label"
+  }, "Milestone"), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-title"
+  }, "You've completed " + missionsCompleted + " missions."), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-desc"
+  }, "That's " + learnedMinutes + " minutes of focused learning \u2014 keep going.")));
+}
+
+// ============================================================
+// SCREEN: CATALOGUE
+// ============================================================
+function CatalogueScreen({ onBack, onCourseSelect }) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "catalogue-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back"), /*#__PURE__*/React.createElement("h1", {
+    className: "catalogue-title"
+  }, "Courses"), /*#__PURE__*/React.createElement("p", {
+    className: "catalogue-subtitle"
+  }, "Build practical AI skills, one short lesson at a time.")), /*#__PURE__*/React.createElement("div", {
+    className: "course-grid"
+  }, COURSES.map(course => /*#__PURE__*/React.createElement("div", {
+    key: course.id,
+    className: "course-card",
+    onClick: () => onCourseSelect(course)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-number"
+  }, course.number), /*#__PURE__*/React.createElement("div", {
+    className: "course-info"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "course-title"
+  }, course.title), /*#__PURE__*/React.createElement("p", {
+    className: "course-desc"
+  }, course.description), /*#__PURE__*/React.createElement("div", {
+    className: "course-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.difficulty), /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.duration), /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.lessons + " lessons")), course.progress > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "course-progress-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-progress-fill",
+    style: { width: course.progress + '%' }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "course-status " + (course.status === 'Continue' ? 'in-progress' : course.status === 'Preview' ? 'coming-soon' : 'not-started')
+  }, course.status))))));
+}
+
+// ============================================================
+// SCREEN: COURSE DETAIL
+// ============================================================
+function CourseDetailScreen({ course, onBack, onStartLesson }) {
+  const availableLessons = course.lessonIds && course.lessonIds.length > 0 ?
+    course.lessonIds.map((id, i) => {
+      const lesson = LESSONS.find(l => l.id === id);
+      return lesson ? { ...lesson, index: i + 1 } : null;
+    }).filter(Boolean) : [];
+
+  const isPlayable = course.status === 'Continue';
+  const lessonIds = course.lessonIds || [];
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "detail-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back to courses"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-number"
+  }, course.number), /*#__PURE__*/React.createElement("h1", {
+    className: "detail-title"
+  }, course.title), /*#__PURE__*/React.createElement("p", {
+    className: "detail-desc"
+  }, course.description), /*#__PURE__*/React.createElement("div", {
+    className: "detail-meta-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip"
+  }, course.difficulty), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip"
+  }, course.duration), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip accent"
+  }, (course.lessons || 0) + " lessons"), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip",
+    style: { marginLeft: 'auto' }
+  }, (course.progress > 0 ? course.progress + '% complete' : 'Not started'))), /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "What you'll learn"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: '#f5f5f7',
+      lineHeight: 1.5
+    }
+  }, course.outcome))), availableLessons.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "Lessons"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-list"
+  }, availableLessons.map(l => /*#__PURE__*/React.createElement("div", {
+    key: l.id,
+    className: "detail-lesson-item" + (isPlayable ? '' : ' locked')
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-num"
+  }, l.index), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-title"
+  }, l.title), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-desc"
+  }, l.topic)), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-duration"
+  }, l.tags[1]))))), !availableLessons.length && /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "Lessons"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-list"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-item locked"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-num"
+  }, '\u2022'), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-title"
+  }, "More lessons coming soon"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-desc"
+  }, "This course is being built.")))), /*#__PURE__*/React.createElement("div", {
+    className: "detail-cta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-cta-text"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label"
+  }, isPlayable ? 'Your next mission' : 'Preview track'), /*#__PURE__*/React.createElement("h3", null, isPlayable ? 'Ready to continue?' : 'More lessons coming soon'), /*#__PURE__*/React.createElement("p", null, isPlayable ? 'Pick up where you left off with your next 5-minute mission.' : 'This learning path is being built. Preview what\'s available now.')), isPlayable && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      marginLeft: 'auto',
+      minHeight: 44,
+      padding: '12px 20px',
+      width: 'auto'
+    },
+    onClick: () => { const firstId = lessonIds[0]; const l = LESSONS.find(le => le.id === firstId); if (l) onStartLesson(l); }
+  }, "Start lesson", Icons.arrowRight)))));
+}
+
+// ============================================================
+// SCREEN: PROGRESS
+// ============================================================
+function ProgressScreen({ onBack }) {
+  const completionRate = Object.keys(courseProgress).length / COURSES.length;
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontSize: 22,
+      fontWeight: 700,
+      marginBottom: 4
+    }
+  }, "Your progress"), /*#__PURE__*/React.createElement("p", {
+    className: "greeting-message"
+  }, "See how your learning adds up over time.")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-summary"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, streak + (streak === 1 ? ' day' : ' days')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Current streak")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, sessionsCompleted), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Sessions completed")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat progress-stat-accent"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, learnedMinutes), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Minutes learned")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, missionsCompleted + (missionsCompleted === 1 ? ' mission' : ' missions')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Missions completed")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, Math.round(completionRate * 100) + '%'), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Course progress"))), /*#__PURE__*/React.createElement("div", {
+    className: "insight-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "insight-label"
+  }, "Personal insight"), /*#__PURE__*/React.createElement("div", {
+    className: "insight-title"
+  }, "You learn best when the next step is concrete."), /*#__PURE__*/React.createElement("div", {
+    className: "insight-desc"
+  }, "Short, specific missions help you build momentum. Keep showing up for the next 5 minutes.")), COURSES.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: "milestone-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "milestone-label"
+  }, "Course"), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-title"
+  }, c.title), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-desc"
+  }, c.progress > 0 ? c.progress + '% complete (' + c.lessons + ' lessons)' : 'Not started yet'))));
+}
+
+// ============================================================
+// MAIN APP
+// ============================================================
 
 // ============================================================
 // MAIN APP
@@ -1972,8 +3084,72 @@ function App() {
   const [notificationVisible, setNotificationVisible] = useState(false);
   const [devMode, setDevMode] = useState(false);
   const [eventLogVisible, setEventLogVisible] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    try {
+      const stored = localStorage.getItem('unrot-theme');
+      if (stored === 'light' || stored === 'dark') return stored;
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+    } catch (e) { /* ignore */ }
+    return 'light';
+  });
+  const handleThemeToggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try { localStorage.setItem('unrot-theme', next); } catch (e) { /* ignore */ }
+    document.documentElement.setAttribute('data-theme', next);
+  };
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+  // Product state (persisted)
+  const [streak, setStreak] = useState(() => loadStored(STORAGE_KEYS.streak, 0));
+  const [sessionsCompleted, setSessionsCompleted] = useState(() => loadStored(STORAGE_KEYS.sessions, 0));
+  const [learnedMinutes, setLearnedMinutes] = useState(() => loadStored(STORAGE_KEYS.minutes, 0));
+  const [missionsCompleted, setMissionsCompleted] = useState(() => loadStored(STORAGE_KEYS.missions, 0));
+  const [courseProgress, setCourseProgress] = useState(() => loadStored(STORAGE_KEYS.courseProgress, {}));
+  const [completedLessons, setCompletedLessons] = useState(() => loadStored(STORAGE_KEYS.completedLessons, []));
+  const [currentCourse, setCurrentCourse] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
 
-  // Reset for demo
+  // Persist product state
+  useEffect(() => { saveStored(STORAGE_KEYS.streak, streak); }, [streak]);
+  useEffect(() => { saveStored(STORAGE_KEYS.sessions, sessionsCompleted); }, [sessionsCompleted]);
+  useEffect(() => { saveStored(STORAGE_KEYS.minutes, learnedMinutes); }, [learnedMinutes]);
+  useEffect(() => { saveStored(STORAGE_KEYS.missions, missionsCompleted); }, [missionsCompleted]);
+  useEffect(() => { saveStored(STORAGE_KEYS.courseProgress, courseProgress); }, [courseProgress]);
+  useEffect(() => { saveStored(STORAGE_KEYS.completedLessons, completedLessons); }, [completedLessons]);
+
+
+
+
+  // Landing auth handlers
+  const handleLandingLogin = () => { setAuthModalOpen(true); setAuthMode('login'); };
+  const handleLandingSignup = () => { setAuthModalOpen(true); setAuthMode('signup'); };
+  const handleLandingStart = () => { setPhase('onboarding'); };
+  const handleAuthClose = () => { setAuthModalOpen(false); };
+  const handleAuthComplete = (userData, isNewUser) => {
+    setUser(userData);
+    setPhase(isNewUser ? 'onboarding' : 'dashboard');
+  };
+
+  // Navigation handlers
+  const handleToDashboard = () => { setPhase('dashboard'); };
+  const handleToCatalogue = () => { setPhase('catalogue'); };
+  const handleToProgress = () => { setPhase('progress'); };
+  const handleToCourseDetail = (course) => { setCurrentCourse(course); setPhase('courseDetail'); };
+  const handleCourseDetailBack = () => { setPhase('catalogue'); };
+  const handleCatalogueBack = () => { setPhase('dashboard'); };
+
+  // D1 completion handlers
+  const handleD1BackToDashboard = () => { setPhase('dashboard'); };
+  const handleD1ContinueLearning = () => {
+    const nextLesson = LESSONS.find(l => l.id === LESSONS[1].nextLessonId);
+    if (nextLesson) { setLesson(nextLesson); setPhase('lesson'); }
+    else { setPhase('catalogue'); }
+  };
+
+  // Reset for demo (also resets product state)
   const handleReset = () => {
     clearEvents();
     setUser({
@@ -1991,6 +3167,12 @@ function App() {
     setPhase('onboarding');
     setNotificationVisible(false);
     setEventLogVisible(false);
+    setStreak(0);
+    setSessionsCompleted(0);
+    setLearnedMinutes(0);
+    setMissionsCompleted(0);
+    setCourseProgress({});
+    setCompletedLessons([]);
     logEvent('new_user', {
       user_id: user.id,
       timestamp: new Date().toISOString(),
@@ -2083,6 +3265,14 @@ function App() {
     visible: notificationVisible && phase === 'notification',
     onTap: handleNotificationTap,
     onDismiss: handleNotificationDismiss
+  }), phase === 'landing' && /*#__PURE__*/React.createElement(LandingScreen, {
+    onStart: handleLandingStart,
+    onLogin: handleLandingLogin,
+    onSignup: handleLandingSignup
+  }), authModalOpen && /*#__PURE__*/React.createElement(AuthModal, {
+    mode: authMode,
+    onClose: handleAuthClose,
+    onAuthComplete: handleAuthComplete
   }), phase === 'onboarding' && /*#__PURE__*/React.createElement(OnboardingScreen, {
     onComplete: handleOnboardingComplete,
     user: user
@@ -2143,7 +3333,29 @@ function App() {
    active: "streak"
  }), /*#__PURE__*/React.createElement(D1CompleteScreen, {
    user: user,
-   lesson: lesson
+   lesson: lesson,
+   setPhase: setPhase
+ })), phase === 'dashboard' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "home"
+ }), /*#__PURE__*/React.createElement(DashboardScreen, {
+   onCourses: handleToCatalogue,
+   onProgress: handleToProgress,
+   onContinue: handleD1ContinueLearning
+ })), phase === 'catalogue' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "courses"
+ }), /*#__PURE__*/React.createElement(CatalogueScreen, {
+   onBack: handleToDashboard,
+   onCourseSelect: handleToCourseDetail
+ })), phase === 'courseDetail' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "courses"
+ }), /*#__PURE__*/React.createElement(CourseDetailScreen, {
+   course: currentCourse,
+   onBack: handleCatalogueBack,
+   onStartLesson: (lessonId) => { const l = LESSONS.find(le => le.id === lessonId); if (l) { setLesson(l); setPhase('lesson'); } }
+ })), phase === 'progress' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "progress"
+ }), /*#__PURE__*/React.createElement(ProgressScreen, {
+   onBack: handleToDashboard
  })), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
@@ -2170,6 +3382,7 @@ function App() {
   }, "Unrot — AI learning, made simple.")));
 }
 app.render(/*#__PURE__*/React.createElement(App, null));
+
 </script>
 </body>
 </html>

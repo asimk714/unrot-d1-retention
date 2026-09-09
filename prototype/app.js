@@ -257,9 +257,97 @@ const Icons = {
     }
   }, /*#__PURE__*/React.createElement("path", {
     d: "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"
-  }))
+  })),
+  sun: /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    style: { width: 16, height: 16 }
+  }, /*#__PURE__*/React.createElement("circle", { cx: "12", cy: "12", r: "4" }),
+     /*#__PURE__*/React.createElement("path", { d: "M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" })),
+  moon: /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    style: { width: 16, height: 16 }
+  }, /*#__PURE__*/React.createElement("path", { d: "M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" })),
+
 };
-const app = ReactDOM.createRoot(document.getElementById('root'));
+const app = ReactDOM.createRoot
+// ============================================================
+// COURSE CATALOGUE
+// ============================================================
+const COURSES = [
+  {
+    id: 'course-001',
+    number: '01',
+    title: 'AI Fundamentals',
+    description: 'Build a clear mental model of modern AI.',
+    outcome: 'Understand how AI systems work and what they can do.',
+    difficulty: 'Beginner',
+    duration: '15 min',
+    lessons: 3,
+    progress: 28,
+    status: 'Continue',
+    color: '#007aff'
+  },
+  {
+    id: 'course-002',
+    number: '02',
+    title: 'Prompt Engineering',
+    description: 'Write clearer prompts and get better results.',
+    outcome: 'Get better outputs from AI by communicating more precisely.',
+    difficulty: 'Beginner',
+    duration: '20 min',
+    lessons: 3,
+    progress: 42,
+    status: 'Continue',
+    color: '#5856d6'
+  },
+  {
+    id: 'course-003',
+    number: '03',
+    title: 'AI Agents',
+    description: 'Understand how AI systems move from chat to action.',
+    outcome: 'See what changes when AI can take actions, not just answer questions.',
+    difficulty: 'Intermediate',
+    duration: '25 min',
+    lessons: 2,
+    progress: 0,
+    status: 'Preview',
+    color: '#34c759'
+  },
+  {
+    id: 'course-004',
+    number: '04',
+    title: 'Problem Solving with AI',
+    description: 'Turn messy problems into structured AI workflows.',
+    outcome: 'Learn to break down complex problems and use AI at each step.',
+    difficulty: 'Intermediate',
+    duration: '20 min',
+    lessons: 3,
+    progress: 0,
+    status: 'Coming next',
+    color: '#ff9500'
+  },
+  {
+    id: 'course-005',
+    number: '05',
+    title: 'AI for Product & Work',
+    description: 'Apply AI to research, decisions, and execution.',
+    outcome: 'Use AI to accelerate research, synthesis, and decision-making.',
+    difficulty: 'Intermediate',
+    duration: '30 min',
+    lessons: 4,
+    progress: 0,
+    status: 'Coming next',
+    color: '#ff3b30'
+  }
+];
+
+(document.getElementById('root'));
 
 // ============================================================
 // UTILITY
@@ -1152,13 +1240,53 @@ function Day1LessonScreen({
 // ============================================================
 function D1CompleteScreen({
   user,
-  lesson
+  lesson,
+  setPhase
 }) {
   const mission = LESSONS.find(l => l.id === user.missionLessonId) || LESSONS[1];
   const nextLesson = LESSONS.find(l => l.id === mission.nextLessonId);
 
+  // Update progress on completion
+  useEffect(() => {
+    setStreak(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.streak, next);
+      return next;
+    });
+    setSessionsCompleted(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.sessions, next);
+      return next;
+    });
+    setLearnedMinutes(prev => {
+      const next = prev + 10;
+      saveStored(STORAGE_KEYS.minutes, next);
+      return next;
+    });
+    setMissionsCompleted(prev => {
+      const next = prev + 1;
+      saveStored(STORAGE_KEYS.missions, next);
+      return next;
+    });
+    if (mission.id === 'lesson-002') {
+      setCourseProgress(prev => {
+        const next = { ...prev, 'course-002': Math.min(100, (prev['course-002'] || 0) + 10) };
+        saveStored(STORAGE_KEYS.courseProgress, next);
+        return next;
+      });
+    }
+    setCompletedLessons(prev => {
+      if (!prev.includes(mission.id)) {
+        const next = [...prev, mission.id];
+        saveStored(STORAGE_KEYS.completedLessons, next);
+        return next;
+      }
+      return prev;
+    });
+  }, []);
+
   return /*#__PURE__*/React.createElement("div", {
-    className: "screen"
+    className: "completion-screen"
   }, /*#__PURE__*/React.createElement("div", {
     className: "status-bar"
   }, /*#__PURE__*/React.createElement("span", null, "9:41"), /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCE6 \uD83D\uDD5B")), /*#__PURE__*/React.createElement("div", {
@@ -1168,78 +1296,52 @@ function D1CompleteScreen({
       textAlign: 'center'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "completion-hero"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "completion-check"
   }, Icons.check), /*#__PURE__*/React.createElement("div", {
-    className: "streak-badge",
-    style: {
-      marginBottom: 12,
-      display: 'inline-flex'
-    }
+    className: "completion-streak"
   }, /*#__PURE__*/React.createElement("span", {
     className: "streak-fire"
-  }, "\uD83D\uDD25"), /*#__PURE__*/React.createElement("span", null, "2 days")), /*#__PURE__*/React.createElement("h1", {
-    style: {
-      marginBottom: 4
-    }
+  }, "\uD83D\uDD25"), " " + streak + " day streak"), /*#__PURE__*/React.createElement("h1", {
+    className: "completion-title"
   }, "Mission complete."), /*#__PURE__*/React.createElement("p", {
-    className: "small",
-    style: {
-      color: '#98989d',
-      marginBottom: 16
-    }
-  }, "You kept your streak alive — Day 2 done."), /*#__PURE__*/React.createElement("div", {
-    className: "card-ivory",
-    style: {
-      marginBottom: 16,
-      textAlign: 'center'
-    }
-  }, /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontSize: 14,
-      color: '#f5f5f7',
-      marginBottom: 6
-    }
-  }, "You're building a habit that compounds."), /*#__PURE__*/React.createElement("p", {
+    className: "completion-subtitle"
+  }, "Day 1 is done."), /*#__PURE__*/React.createElement("p", {
     className: "small",
     style: {
       color: '#98989d',
       marginBottom: 0
     }
-  }, "Two days in, and you already know more than you did yesterday."), nextLesson && /*#__PURE__*/React.createElement("div", {
-    className: "mission-hero fade-in",
-    style: {
-      marginTop: 16,
-      padding: '20px 16px',
-      background: 'linear-gradient(135deg, rgba(0,122,255,0.1), rgba(88,86,214,0.06))',
-      border: '1px solid #25252e',
-      borderRadius: 16
-    }
+  }, "Your next 5-minute mission is ready.")), /*#__PURE__*/React.createElement("div", {
+    className: "completion-insight"
+  }, /*#__PURE__*/React.createElement("p", null, "You're building a habit that compounds."), /*#__PURE__*/React.createElement("p", {
+    className: "small"
+  }, "Two days in, and you already know more than you did yesterday.")), nextLesson && /*#__PURE__*/React.createElement("div", {
+    className: "completion-next"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "label",
-    style: {
-      marginBottom: 8,
-      color: '#007aff'
-    }
+    className: "completion-next-label"
   }, "Coming up next"), /*#__PURE__*/React.createElement("h3", {
-    style: {
-      marginBottom: 4
-    }
+    className: "completion-next-title"
   }, nextLesson.title), /*#__PURE__*/React.createElement("p", {
-    className: "small",
-    style: {
-      color: '#98989d',
-      marginBottom: 0
-    }
-  }, nextLesson.topic, " \u00B7 ", nextLesson.tags[1])), /*#__PURE__*/React.createElement("p", {
+    className: "completion-next-desc"
+  }, nextLesson.topic + " \u00B7 " + nextLesson.tags[1])), /*#__PURE__*/React.createElement("p", {
     className: "small",
     style: {
       textAlign: 'center',
       marginTop: 12,
       color: '#636366'
     }
-  }, "Your progress is saved. Keep going tomorrow."))));
+  }, "Your progress is saved. Keep going tomorrow."), /*#__PURE__*/React.createElement("div", {
+    className: "completion-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: () => setPhase('dashboard')
+  }, "Back to dashboard", Icons.home), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-secondary",
+    onClick: nextLesson ? () => setPhase('lesson') : () => setPhase('catalogue')
+  }, nextLesson ? "Continue learning" : "Browse courses", Icons.arrowRight))));
 }
-
 // ============================================================
 function NotificationSim({
   visible,
@@ -1381,17 +1483,13 @@ function BottomNav({
     icon: Icons.home,
     label: 'Home'
   }, {
-    id: 'streak',
-    icon: Icons.fire,
-    label: 'Streak'
-  }, {
-    id: 'news',
-    icon: Icons.news,
-    label: 'News'
-  }, {
-    id: 'book',
+    id: 'courses',
     icon: Icons.book,
-    label: 'Lessons'
+    label: 'Courses'
+  }, {
+    id: 'progress',
+    icon: Icons.sparkle,
+    label: 'Progress'
   }];
   return /*#__PURE__*/React.createElement("div", {
     className: "bottom-nav"
@@ -1400,6 +1498,588 @@ function BottomNav({
     className: `nav-item ${item.id === active || item.active ? 'active' : ''}`
   }, item.icon, /*#__PURE__*/React.createElement("span", null, item.label))));
 }
+
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
+const STORAGE_KEYS = {
+  theme: 'unrot-theme',
+  user: 'unrot_user',
+  streak: 'unrot_streak',
+  sessions: 'unrot_sessions',
+  minutes: 'unrot_minutes',
+  missions: 'unrot_missions',
+  courseProgress: 'unrot_course_progress',
+  completedLessons: 'unrot_completed_lessons'
+};
+
+function loadStored(key, fallback) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch (e) { return fallback; }
+}
+
+function saveStored(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
+}
+
+
+// ============================================================
+// SCREEN: LANDING
+// ============================================================
+function LandingScreen({ onStart, onLogin, onSignup }) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "landing-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "landing-header"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "wordmark"
+  }, "Unrot"), /*#__PURE__*/React.createElement("div", {
+    className: "header-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "theme-toggle-btn",
+    onClick: handleThemeToggle,
+    "aria-label": theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
+    style: {
+      position: "static",
+      width: "36px",
+      height: "36px",
+      padding: "0px",
+      background: "transparent",
+      border: "1px solid rgba(255,255,255,0.1)",
+      borderRadius: "50%",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#f5f5f7"
+    }
+  }, theme === "dark" ? Icons.sun : Icons.moon))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "hero-eyebrow"
+  }, /*#__PURE__*/React.createElement("span", null, "Practical AI, 5 minutes a day")), /*#__PURE__*/React.createElement("h1", {
+    className: "hero-title"
+  }, "Five minutes today.", /*#__PURE__*/React.createElement("br", null), "More capable tomorrow."), /*#__PURE__*/React.createElement("p", {
+    className: "hero-subtitle"
+  }, "Short, focused lessons that help you build useful AI skills without adding another hour to your day."), /*#__PURE__*/React.createElement("div", {
+    className: "hero-cta-group"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-primary",
+    onClick: onStart
+  }, "Wanna try? Have 5 minutes ", Icons.arrowRight), /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-secondary",
+    onClick: onLogin
+  }, "Log in"), /*#__PURE__*/React.createElement("button", {
+    className: "btn-hero-secondary",
+    onClick: onSignup
+  }, "Sign up"))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-features"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.book), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "One concept a day \u2014 short lessons designed to fit your schedule.")), /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.sparkle), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "Concrete missions that make your learning visible and rewarding.")), /*#__PURE__*/React.createElement("div", {
+    className: "feature-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "feature-icon"
+  }, Icons.fire), /*#__PURE__*/React.createElement("div", {
+    className: "feature-text"
+  }, "Track your streak and see your progress compound over time."))), /*#__PURE__*/React.createElement("div", {
+    className: "landing-footer"
+  }, "Built for busy professionals who want to stay ahead of AI."));
+}
+
+// ============================================================
+// SCREEN: AUTH MODAL (demo only)
+// ============================================================
+function AuthModal({ mode, onClose, onAuthComplete }) {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const validatePassword = (v) => v.length >= 6;
+
+  const handleSubmit = () => {
+    setError('');
+    if (!email.trim()) { setError('Please enter your email.'); return; }
+    if (!validateEmail(email)) { setError('Enter a valid email address.'); return; }
+    if (mode === 'signup') {
+      if (!name.trim()) { setError('Please enter your name.'); return; }
+      if (!password || !validatePassword(password)) { setError('Password must be at least 6 characters.'); return; }
+    } else {
+      if (!password || !validatePassword(password)) { setError('Enter your password.'); return; }
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      const userData = {
+        id: 'user-' + Math.random().toString(36).slice(2, 8),
+        name: mode === 'signup' ? name.trim() : (name.trim() || email.split('@')[0]),
+        email: email.trim(),
+        notifGranted: null,
+        isFirstSession: mode === 'signup',
+        currentSession: 'sess-' + Date.now(),
+        d1Session: 'sess-d1-' + Date.now(),
+        returnedFromNotification: false,
+        reminderTime: null,
+        missionLessonId: null
+      };
+      saveStored(STORAGE_KEYS.user, userData);
+      onAuthComplete(userData, mode === 'signup');
+      onClose();
+    }, 400);
+  };
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: onClose
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-sheet",
+    onClick: (e) => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-handle"
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "modal-close",
+    onClick: onClose
+  }, Icons.x), /*#__PURE__*/React.createElement("h2", {
+    className: "modal-title"
+  }, mode === 'login' ? 'Welcome back' : 'Create your account'), /*#__PURE__*/React.createElement("p", {
+    className: "modal-subtitle"
+  }, mode === 'login' ? 'Log in to continue your learning.' : 'Start building your AI skills today.'), mode === 'signup' && /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Your name"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "text",
+    placeholder: "Asim",
+    value: name,
+    onChange: (e) => setName(e.target.value),
+    autoComplete: "name"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Email"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "email",
+    placeholder: "you@example.com",
+    value: email,
+    onChange: (e) => setEmail(e.target.value),
+    autoComplete: "email"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Password"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "password",
+    placeholder: mode === 'login' ? 'Your password' : 'At least 6 characters',
+    value: password,
+    onChange: (e) => setPassword(e.target.value),
+    autoComplete: "new-password"
+  })), error && /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: '#ff3b30',
+      fontSize: 13,
+      marginBottom: 12,
+      textAlign: 'center'
+    }
+  }, error), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    onClick: handleSubmit,
+    disabled: loading
+  }, loading ? 'Please wait' : (mode === 'login' ? 'Continue' : 'Create account'), Icons.arrowRight), /*#__PURE__*/React.createElement("div", {
+    className: "auth-divider"
+  }, "or"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    onClick: onClose,
+    style: {
+      width: '100%',
+      padding: '12px',
+      fontSize: 14,
+      textAlign: 'center'
+    }
+  }, mode === 'login' ? "I don\'t have an account" : "I already have an account"), /*#__PURE__*/React.createElement("p", {
+    className: "demo-badge"
+  }, "Demo mode \u2014 no real account needed.")));
+}
+
+// ============================================================
+// SCREEN: DASHBOARD
+// ============================================================
+function DashboardScreen({ onCourses, onProgress, onContinue }) {
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 17) return 'Good afternoon';
+    return 'Good evening';
+  })();
+
+  const nextMission = COURSES.find(c => c.progress > 0 && c.status === 'Continue');
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-greeting"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "greeting-name"
+  }, greeting + ', ' + (user.name || 'there')), /*#__PURE__*/React.createElement("p", {
+    className: "greeting-message"
+  }, "Keep your learning momentum going.")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-summary"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, streak + (streak === 1 ? ' day' : ' days')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Streak")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, sessionsCompleted), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Sessions")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat progress-stat-accent"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, learnedMinutes), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Minutes learned")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, missionsCompleted + (missionsCompleted === 1 ? ' mission' : ' missions')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Missions")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, Object.keys(courseProgress).length), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Courses"))), nextMission && /*#__PURE__*/React.createElement("div", {
+    className: "today-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-label"
+  }, "Next 5-minute mission"), /*#__PURE__*/React.createElement("h2", {
+    className: "today-mission-title"
+  }, nextMission.title), /*#__PURE__*/React.createElement("p", {
+    className: "today-mission-desc"
+  }, nextMission.description), /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-progress"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-progress-fill"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary today-mission-cta",
+    onClick: onContinue
+  }, "Continue learning ", Icons.arrowRight)), !nextMission && /*#__PURE__*/React.createElement("div", {
+    className: "today-mission"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "today-mission-label"
+  }, "Your next mission"), /*#__PURE__*/React.createElement("h2", {
+    className: "today-mission-title"
+  }, "Start your first 5-minute mission."), /*#__PURE__*/React.createElement("p", {
+    className: "today-mission-desc"
+  }, "Pick a course and begin building your AI skills."), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary today-mission-cta",
+    onClick: onCourses
+  }, "View courses", Icons.arrowRight)), /*#__PURE__*/React.createElement("div", {
+    className: "section-header"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "Your courses"), /*#__PURE__*/React.createElement("button", {
+    className: "section-link",
+    onClick: onCourses
+  }, "See all")), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-list"
+  }, COURSES.slice(0, 3).map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: "mini-course-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-icon"
+  }, c.number), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-name"
+  }, c.title), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-progress-text"
+  }, (c.progress > 0 ? c.progress + '% done' : 'Not started yet'))), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-right"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-percent"
+  }, c.progress > 0 ? c.progress + '%' : '\u2014'), /*#__PURE__*/React.createElement("div", {
+    className: "mini-course-label"
+  }, c.progress > 0 ? 'Complete' : 'Start'))))), /*#__PURE__*/React.createElement("div", {
+    className: "section-header"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "Insights"), /*#__PURE__*/React.createElement("button", {
+    className: "section-link",
+    onClick: onProgress
+  }, "View progress")), /*#__PURE__*/React.createElement("div", {
+    className: "insight-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "insight-label"
+  }, "Your pattern"), /*#__PURE__*/React.createElement("div", {
+    className: "insight-title"
+  }, "You learn best when the next step is concrete."), /*#__PURE__*/React.createElement("div", {
+    className: "insight-desc"
+  }, streak > 0 ? "Your streak shows you're building a habit. Keep the next step small and specific." : "Start with one 5-minute lesson and see how it feels.")), missionsCompleted >= 3 && /*#__PURE__*/React.createElement("div", {
+    className: "milestone-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "milestone-label"
+  }, "Milestone"), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-title"
+  }, "You've completed " + missionsCompleted + " missions."), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-desc"
+  }, "That's " + learnedMinutes + " minutes of focused learning \u2014 keep going.")));
+}
+
+// ============================================================
+// SCREEN: CATALOGUE
+// ============================================================
+function CatalogueScreen({ onBack, onCourseSelect }) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "catalogue-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back"), /*#__PURE__*/React.createElement("h1", {
+    className: "catalogue-title"
+  }, "Courses"), /*#__PURE__*/React.createElement("p", {
+    className: "catalogue-subtitle"
+  }, "Build practical AI skills, one short lesson at a time.")), /*#__PURE__*/React.createElement("div", {
+    className: "course-grid"
+  }, COURSES.map(course => /*#__PURE__*/React.createElement("div", {
+    key: course.id,
+    className: "course-card",
+    onClick: () => onCourseSelect(course)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-number"
+  }, course.number), /*#__PURE__*/React.createElement("div", {
+    className: "course-info"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "course-title"
+  }, course.title), /*#__PURE__*/React.createElement("p", {
+    className: "course-desc"
+  }, course.description), /*#__PURE__*/React.createElement("div", {
+    className: "course-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.difficulty), /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.duration), /*#__PURE__*/React.createElement("span", {
+    className: "course-meta-item"
+  }, course.lessons + " lessons")), course.progress > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "course-progress-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "course-progress-fill",
+    style: { width: course.progress + '%' }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "course-status " + (course.status === 'Continue' ? 'in-progress' : course.status === 'Preview' ? 'coming-soon' : 'not-started')
+  }, course.status))))));
+}
+
+// ============================================================
+// SCREEN: COURSE DETAIL
+// ============================================================
+function CourseDetailScreen({ course, onBack, onStartLesson }) {
+  const availableLessons = course.lessonIds && course.lessonIds.length > 0 ?
+    course.lessonIds.map((id, i) => {
+      const lesson = LESSONS.find(l => l.id === id);
+      return lesson ? { ...lesson, index: i + 1 } : null;
+    }).filter(Boolean) : [];
+
+  const isPlayable = course.status === 'Continue';
+  const lessonIds = course.lessonIds || [];
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "detail-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back to courses"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-number"
+  }, course.number), /*#__PURE__*/React.createElement("h1", {
+    className: "detail-title"
+  }, course.title), /*#__PURE__*/React.createElement("p", {
+    className: "detail-desc"
+  }, course.description), /*#__PURE__*/React.createElement("div", {
+    className: "detail-meta-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip"
+  }, course.difficulty), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip"
+  }, course.duration), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip accent"
+  }, (course.lessons || 0) + " lessons"), /*#__PURE__*/React.createElement("span", {
+    className: "detail-meta-chip",
+    style: { marginLeft: 'auto' }
+  }, (course.progress > 0 ? course.progress + '% complete' : 'Not started'))), /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "What you'll learn"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontSize: 14,
+      color: '#f5f5f7',
+      lineHeight: 1.5
+    }
+  }, course.outcome))), availableLessons.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "Lessons"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-list"
+  }, availableLessons.map(l => /*#__PURE__*/React.createElement("div", {
+    key: l.id,
+    className: "detail-lesson-item" + (isPlayable ? '' : ' locked')
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-num"
+  }, l.index), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-title"
+  }, l.title), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-desc"
+  }, l.topic)), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-duration"
+  }, l.tags[1]))))), !availableLessons.length && /*#__PURE__*/React.createElement("div", {
+    className: "detail-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-section-title"
+  }, "Lessons"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-list"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-item locked"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-num"
+  }, '\u2022'), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-title"
+  }, "More lessons coming soon"), /*#__PURE__*/React.createElement("div", {
+    className: "detail-lesson-desc"
+  }, "This course is being built.")))), /*#__PURE__*/React.createElement("div", {
+    className: "detail-cta"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-cta-text"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "label"
+  }, isPlayable ? 'Your next mission' : 'Preview track'), /*#__PURE__*/React.createElement("h3", null, isPlayable ? 'Ready to continue?' : 'More lessons coming soon'), /*#__PURE__*/React.createElement("p", null, isPlayable ? 'Pick up where you left off with your next 5-minute mission.' : 'This learning path is being built. Preview what\'s available now.')), isPlayable && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      marginLeft: 'auto',
+      minHeight: 44,
+      padding: '12px 20px',
+      width: 'auto'
+    },
+    onClick: () => { const firstId = lessonIds[0]; const l = LESSONS.find(le => le.id === firstId); if (l) onStartLesson(l); }
+  }, "Start lesson", Icons.arrowRight)))));
+}
+
+// ============================================================
+// SCREEN: PROGRESS
+// ============================================================
+function ProgressScreen({ onBack }) {
+  const completionRate = Object.keys(courseProgress).length / COURSES.length;
+
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dashboard-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack
+  }, Icons.arrowLeft, " Back"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontSize: 22,
+      fontWeight: 700,
+      marginBottom: 4
+    }
+  }, "Your progress"), /*#__PURE__*/React.createElement("p", {
+    className: "greeting-message"
+  }, "See how your learning adds up over time.")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-summary"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, streak + (streak === 1 ? ' day' : ' days')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Current streak")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, sessionsCompleted), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Sessions completed")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat progress-stat-accent"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, learnedMinutes), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Minutes learned")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, missionsCompleted + (missionsCompleted === 1 ? ' mission' : ' missions')), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Missions completed")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-value"
+  }, Math.round(completionRate * 100) + '%'), /*#__PURE__*/React.createElement("div", {
+    className: "progress-stat-label"
+  }, "Course progress"))), /*#__PURE__*/React.createElement("div", {
+    className: "insight-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "insight-label"
+  }, "Personal insight"), /*#__PURE__*/React.createElement("div", {
+    className: "insight-title"
+  }, "You learn best when the next step is concrete."), /*#__PURE__*/React.createElement("div", {
+    className: "insight-desc"
+  }, "Short, specific missions help you build momentum. Keep showing up for the next 5 minutes.")), COURSES.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: "milestone-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "milestone-label"
+  }, "Course"), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-title"
+  }, c.title), /*#__PURE__*/React.createElement("div", {
+    className: "milestone-desc"
+  }, c.progress > 0 ? c.progress + '% complete (' + c.lessons + ' lessons)' : 'Not started yet'))));
+}
+
+// ============================================================
+// MAIN APP
+// ============================================================
 
 // ============================================================
 // MAIN APP
@@ -1421,8 +2101,72 @@ function App() {
   const [notificationVisible, setNotificationVisible] = useState(false);
   const [devMode, setDevMode] = useState(false);
   const [eventLogVisible, setEventLogVisible] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    try {
+      const stored = localStorage.getItem('unrot-theme');
+      if (stored === 'light' || stored === 'dark') return stored;
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+    } catch (e) { /* ignore */ }
+    return 'light';
+  });
+  const handleThemeToggle = () => {
+    const next = theme === 'dark' ? 'light' : 'dark';
+    setTheme(next);
+    try { localStorage.setItem('unrot-theme', next); } catch (e) { /* ignore */ }
+    document.documentElement.setAttribute('data-theme', next);
+  };
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+  // Product state (persisted)
+  const [streak, setStreak] = useState(() => loadStored(STORAGE_KEYS.streak, 0));
+  const [sessionsCompleted, setSessionsCompleted] = useState(() => loadStored(STORAGE_KEYS.sessions, 0));
+  const [learnedMinutes, setLearnedMinutes] = useState(() => loadStored(STORAGE_KEYS.minutes, 0));
+  const [missionsCompleted, setMissionsCompleted] = useState(() => loadStored(STORAGE_KEYS.missions, 0));
+  const [courseProgress, setCourseProgress] = useState(() => loadStored(STORAGE_KEYS.courseProgress, {}));
+  const [completedLessons, setCompletedLessons] = useState(() => loadStored(STORAGE_KEYS.completedLessons, []));
+  const [currentCourse, setCurrentCourse] = useState(null);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
 
-  // Reset for demo
+  // Persist product state
+  useEffect(() => { saveStored(STORAGE_KEYS.streak, streak); }, [streak]);
+  useEffect(() => { saveStored(STORAGE_KEYS.sessions, sessionsCompleted); }, [sessionsCompleted]);
+  useEffect(() => { saveStored(STORAGE_KEYS.minutes, learnedMinutes); }, [learnedMinutes]);
+  useEffect(() => { saveStored(STORAGE_KEYS.missions, missionsCompleted); }, [missionsCompleted]);
+  useEffect(() => { saveStored(STORAGE_KEYS.courseProgress, courseProgress); }, [courseProgress]);
+  useEffect(() => { saveStored(STORAGE_KEYS.completedLessons, completedLessons); }, [completedLessons]);
+
+
+
+
+  // Landing auth handlers
+  const handleLandingLogin = () => { setAuthModalOpen(true); setAuthMode('login'); };
+  const handleLandingSignup = () => { setAuthModalOpen(true); setAuthMode('signup'); };
+  const handleLandingStart = () => { setPhase('onboarding'); };
+  const handleAuthClose = () => { setAuthModalOpen(false); };
+  const handleAuthComplete = (userData, isNewUser) => {
+    setUser(userData);
+    setPhase(isNewUser ? 'onboarding' : 'dashboard');
+  };
+
+  // Navigation handlers
+  const handleToDashboard = () => { setPhase('dashboard'); };
+  const handleToCatalogue = () => { setPhase('catalogue'); };
+  const handleToProgress = () => { setPhase('progress'); };
+  const handleToCourseDetail = (course) => { setCurrentCourse(course); setPhase('courseDetail'); };
+  const handleCourseDetailBack = () => { setPhase('catalogue'); };
+  const handleCatalogueBack = () => { setPhase('dashboard'); };
+
+  // D1 completion handlers
+  const handleD1BackToDashboard = () => { setPhase('dashboard'); };
+  const handleD1ContinueLearning = () => {
+    const nextLesson = LESSONS.find(l => l.id === LESSONS[1].nextLessonId);
+    if (nextLesson) { setLesson(nextLesson); setPhase('lesson'); }
+    else { setPhase('catalogue'); }
+  };
+
+  // Reset for demo (also resets product state)
   const handleReset = () => {
     clearEvents();
     setUser({
@@ -1440,6 +2184,12 @@ function App() {
     setPhase('onboarding');
     setNotificationVisible(false);
     setEventLogVisible(false);
+    setStreak(0);
+    setSessionsCompleted(0);
+    setLearnedMinutes(0);
+    setMissionsCompleted(0);
+    setCourseProgress({});
+    setCompletedLessons([]);
     logEvent('new_user', {
       user_id: user.id,
       timestamp: new Date().toISOString(),
@@ -1532,6 +2282,14 @@ function App() {
     visible: notificationVisible && phase === 'notification',
     onTap: handleNotificationTap,
     onDismiss: handleNotificationDismiss
+  }), phase === 'landing' && /*#__PURE__*/React.createElement(LandingScreen, {
+    onStart: handleLandingStart,
+    onLogin: handleLandingLogin,
+    onSignup: handleLandingSignup
+  }), authModalOpen && /*#__PURE__*/React.createElement(AuthModal, {
+    mode: authMode,
+    onClose: handleAuthClose,
+    onAuthComplete: handleAuthComplete
   }), phase === 'onboarding' && /*#__PURE__*/React.createElement(OnboardingScreen, {
     onComplete: handleOnboardingComplete,
     user: user
@@ -1592,7 +2350,29 @@ function App() {
    active: "streak"
  }), /*#__PURE__*/React.createElement(D1CompleteScreen, {
    user: user,
-   lesson: lesson
+   lesson: lesson,
+   setPhase: setPhase
+ })), phase === 'dashboard' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "home"
+ }), /*#__PURE__*/React.createElement(DashboardScreen, {
+   onCourses: handleToCatalogue,
+   onProgress: handleToProgress,
+   onContinue: handleD1ContinueLearning
+ })), phase === 'catalogue' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "courses"
+ }), /*#__PURE__*/React.createElement(CatalogueScreen, {
+   onBack: handleToDashboard,
+   onCourseSelect: handleToCourseDetail
+ })), phase === 'courseDetail' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "courses"
+ }), /*#__PURE__*/React.createElement(CourseDetailScreen, {
+   course: currentCourse,
+   onBack: handleCatalogueBack,
+   onStartLesson: (lessonId) => { const l = LESSONS.find(le => le.id === lessonId); if (l) { setLesson(l); setPhase('lesson'); } }
+ })), phase === 'progress' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(BottomNav, {
+   active: "progress"
+ }), /*#__PURE__*/React.createElement(ProgressScreen, {
+   onBack: handleToDashboard
  })), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'absolute',
